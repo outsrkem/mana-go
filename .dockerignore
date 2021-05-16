@@ -1,0 +1,17 @@
+*.md
+
+.git
+.git/*
+
+.build_cid
+.build_cid/*
+
+
+.dockerignore
+.gitignore
+
+initializeDB.sql
+
+Dockerfile
+
+
