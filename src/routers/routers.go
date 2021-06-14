@@ -3,6 +3,7 @@ package routers
 import (
 	"github.com/gin-gonic/gin"
 	"mana/src/controllers/kubernetes"
+	"mana/src/controllers/menus"
 	"mana/src/controllers/navigation"
 	"mana/src/controllers/resource"
 	"mana/src/controllers/user"
@@ -10,10 +11,10 @@ import (
 	"net/http"
 )
 
-// 路由总配置
+// Index 路由总配置
 func Index(r *gin.Engine) {
-	r.GET("/", func(c *gin.Context) {c.JSON(http.StatusOK, gin.H{"code":"200","message":"successfully"})})
-	r.HEAD("/", func(c *gin.Context) {c.JSON(http.StatusOK,"successfully")})
+	r.GET("/", func(c *gin.Context) { c.JSON(http.StatusOK, gin.H{"code": "200", "message": "successfully"}) })
+	r.HEAD("/", func(c *gin.Context) { c.JSON(http.StatusOK, "successfully") })
 
 	// 用户登录,注册，
 	r.POST("/api/v1/common/user/login", user.Login)
@@ -25,12 +26,14 @@ func Index(r *gin.Engine) {
 	v1Group := r.Group("/api/v1/common")
 	{
 
+		// 获取左侧菜单
+		v1Group.GET("/menus/list", menus.GetMenus)
+
 		// 获取用户详情
 		userGroup := v1Group.Group("/user")
 		{
 			userGroup.GET("/userinfo/:uid", user.FindByUserinfo)
 		}
-
 
 		// 获取导航链接列表，添加链接，编辑，删除，获取单条导航链接记录
 		navGroup := v1Group.Group("/navigation")
