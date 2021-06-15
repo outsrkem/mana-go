@@ -2,6 +2,7 @@ package routers
 
 import (
 	"github.com/gin-gonic/gin"
+	"mana/src/controllers/auth"
 	"mana/src/controllers/kubernetes"
 	"mana/src/controllers/menus"
 	"mana/src/controllers/navigation"
@@ -28,6 +29,10 @@ func Index(r *gin.Engine) {
 
 		// 获取左侧菜单
 		v1Group.GET("/menus/list", menus.GetMenus)
+
+		// 系统管理
+		v1Group.GET("/system/role", auth.GetRoleList)
+		v1Group.POST("/system/role", auth.AddRole)
 
 		// 获取用户详情
 		userGroup := v1Group.Group("/user")

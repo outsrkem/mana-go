@@ -9,7 +9,7 @@ import (
 )
 
 type kubeConfig struct {
-	ID                         string `json:"id"`                         // id
+	ID                         string `json:"Id"`                         // Id
 	USERID                     string `json:"userid"`                     // 用户id
 	CLUSTER_ALIAS              string `json:"cluster_alias"`              // 集群别名
 	CLUSTER_USER               string `json:"cluster_user"`               // 集群权限用户
@@ -96,7 +96,7 @@ func FindByKubeConfigs(uid string, pageSize int, page int) map[string]interface{
 		}
 
 		item := make(map[string]string)
-		item["id"] = k.ID
+		item["Id"] = k.ID
 		item["creationTime"] = k.CREATION_TIME
 		item["clusterName"] = k.CLUSTER_ALIAS
 		item["userName"] = k.CLUSTER_USER

@@ -10,7 +10,7 @@ import (
 
 // 用户表
 type userInfo struct {
-	ID         string `json:"id"`         // id
+	ID         string `json:"Id"`         // Id
 	USERID     string `json:"userid"`     // 用户id
 	USERNAME   string `json:"username"`   // 用户名
 	NICKNAME   string `json:"nickname"`   // 昵称
@@ -23,7 +23,7 @@ type userInfo struct {
 }
 
 type userCenter struct {
-	ID         string `json:"id"`         // id
+	ID         string `json:"Id"`         // Id
 	USERID     string `json:"userid"`     // 用户id,外键
 	USERNAME   string `json:"username"`   // 用户名，外键
 	NICKNAME   string `json:"nickname"`   // 昵称

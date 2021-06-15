@@ -15,7 +15,7 @@ type menuList struct {
 }
 // menuListLevel1 一级菜单
 type menuListLevel1 struct {
-	id       string              `json:"id"`
+	id       string              `json:"Id"`
 	name     string              `json:"name"`
 	path     string              `json:"path"`
 	leafNode []map[string]string `json:"leafNode"`
@@ -30,16 +30,16 @@ func selectMenuLevel2(mId,userId string) []map[string]interface{} {
 
 	// 2.查询菜单的时候匹配权限
 	sqlStr := `SELECT
-					sub.id AS sub_m_id,
+					sub.Id AS sub_m_id,
 					sub.name AS sub_m_name,
 					sub.path AS sub_m_path,
 					sub.level AS sub_m_level,
 					sub.p_code
 				FROM
 					menus m
-				LEFT JOIN menus sub ON (m.id = sub.parent_menu_id)
+				LEFT JOIN menus sub ON (m.Id = sub.parent_menu_id)
 				WHERE
-					m.id = ?;`
+					m.Id = ?;`
 
 	log.Debug(sqlStr)
 	rows, err := mysql.DB.Query(sqlStr, mId)
@@ -64,7 +64,7 @@ func selectMenuLevel2(mId,userId string) []map[string]interface{} {
 				continue
 			}
 			item := make(map[string]interface{})
-			item["id"] = m.sub_m_id
+			item["Id"] = m.sub_m_id
 			item["name"] = m.sub_m_name
 			item["path"] = m.sub_m_path
 			item["leafNode"] = ""
@@ -81,7 +81,7 @@ func SelectMenuList(userId string) *map[string]interface{} {
 	var items []map[string]interface{}
 	items = make([]map[string]interface{}, 0)
 
-	sqlStr_1 := `SELECT id,name,path FROM menus WHERE level =1;`
+	sqlStr_1 := `SELECT Id,name,path FROM menus WHERE level =1;`
 	rows_1, err := mysql.DB.Query(sqlStr_1)
 	if err != nil {
 		log.Info(sqlStr_1, err)
@@ -100,7 +100,7 @@ func SelectMenuList(userId string) *map[string]interface{} {
 			log.Debug("没有子菜单，或略一级菜单, 一级菜单id: ", m.id)
 			continue
 		}
-		item["id"] = m.id
+		item["Id"] = m.id
 		item["name"] = m.name
 		item["path"] = m.path
 		item["leafNode"] = leafNode
@@ -120,7 +120,7 @@ func FindByMenuPermission(userId string) *[]string {
 					menus m
 				WHERE
 					ru.rid = rm.rid
-				AND rm.mid = m.id
+				AND rm.mid = m.Id
 				AND ru.userid = ?
 				AND m.p_code IS NOT NULL;`
 

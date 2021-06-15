@@ -7,22 +7,22 @@ import (
 )
 
 type resourceLinks struct {
-	ID         string `json:"id"`         // id
+	ID         string `json:"Id"`         // Id
 	USERID     string `json:"userid"`     // 用户id
 	LINKNAME   string `json:"linkname"`   // 链接名
 	LINKURL    string `json:"linkurl"`    // url
 	DESCRIBES  string `json:"describes"`  // 说明
 	CATEGORY   string `json:"category"`   // 类别
 	ACTIVATE   string `json:"activate"`   // 状态
-	CREATETIME string `json:"createTime"` // 创建时间
-	UPDATETIME string `json:"updateTime"` // 更新时间
+	CREATETIME string `json:"CreateTime"` // 创建时间
+	UPDATETIME string `json:"UpdateTime"` // 更新时间
 }
 
 func NewResourceLinks() *resourceLinks {
 	return &resourceLinks{
 		ACTIVATE:   "0",
 		UPDATETIME: strconv.FormatInt(time.Now().Unix(), 10),
-		CREATETIME: strconv.FormatInt(time.Now().Unix(), 10),
+		CREATETIME: strconv.FormatInt(time.Now().UnixNano(), 10),
 	}
 }
 
@@ -93,14 +93,14 @@ func FindByResourceLinks(pageSize, page int, activate, category string) (*map[st
 		createTime, _ := strconv.ParseInt(l.CREATETIME, 10, 64)
 		updateTime, _ := strconv.ParseInt(l.UPDATETIME, 10, 64)
 		item := make(map[string]string)
-		item["id"] = l.ID
+		item["Id"] = l.ID
 		item["name"] = l.LINKNAME
 		item["content"] = l.LINKURL
 		item["describes"] = l.DESCRIBES
 		item["activate"] = l.ACTIVATE
 		item["category"] = l.CATEGORY
-		item["createTime"] = time.Unix(createTime, 0).Format("2006-01-02 15:04:05")
-		item["updateTime"] = time.Unix(updateTime, 0).Format("2006-01-02 15:04:05")
+		item["CreateTime"] = time.Unix(createTime, 0).Format("2006-01-02 15:04:05")
+		item["UpdateTime"] = time.Unix(updateTime, 0).Format("2006-01-02 15:04:05")
 		items = append(items, item)
 	}
 
@@ -124,14 +124,14 @@ func FindByResourceLinksTheId(id string) (*map[string]string, error) {
 	createTime, _ := strconv.ParseInt(l.CREATETIME, 10, 64)
 	updateTime, _ := strconv.ParseInt(l.UPDATETIME, 10, 64)
 	item := make(map[string]string)
-	item["id"] = l.ID
+	item["Id"] = l.ID
 	item["name"] = l.LINKNAME
 	item["content"] = l.LINKURL
 	item["describes"] = l.DESCRIBES
 	item["activate"] = l.ACTIVATE
 	item["category"] = l.CATEGORY
-	item["createTime"] = time.Unix(createTime, 0).Format("2006-01-02 15:04:05")
-	item["updateTime"] = time.Unix(updateTime, 0).Format("2006-01-02 15:04:05")
+	item["CreateTime"] = time.Unix(createTime, 0).Format("2006-01-02 15:04:05")
+	item["UpdateTime"] = time.Unix(updateTime, 0).Format("2006-01-02 15:04:05")
 
 	returns := item
 	return &returns, err
