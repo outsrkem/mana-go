@@ -1,6 +1,7 @@
 package models
 
 import (
+	"fmt"
 	"mana/src/connections/database/mysql"
 	"time"
 )
@@ -69,6 +70,29 @@ func InsertTheRole(r *roleList) (int64, error) {
 		log.Error("get last Insert role ID failed, err:", err)
 		return -1, err
 	}
-
 	return id, err
+}
+
+// DeleteRole 删除角色
+func DeleteRole()  {
+	//sqlStr := `DELETE FROM role WHERE id in(1033,1033,1035,1036)`
+	rolrIdList := make([]string, 0)
+	rolrIdList = append(rolrIdList, "1042")
+	rolrIdList = append(rolrIdList, "1043")
+	rolrIdList = append(rolrIdList, "1044")
+	rolrIdList = append(rolrIdList, "1045")
+
+	id := ""
+	for _, v := range rolrIdList {
+		if len(id) == 0 {
+			id = id + v
+			continue
+		}
+		id = id + "," + v
+	}
+	sqlStr := `DELETE FROM role WHERE id in(` + id + `)`
+	fmt.Println(sqlStr)
+	ret, _ := mysql.DB.Exec(sqlStr)
+	n, _ := ret.RowsAffected()
+	fmt.Println(n)
 }
