@@ -7,6 +7,7 @@ import (
 	"mana/src/config"
 	"mana/src/models"
 	"net/http"
+	"regexp"
 )
 
 var log = config.Log()
@@ -34,6 +35,13 @@ func AddRole(c *gin.Context) {
 	}
 
 	r.RoleName = gjson.Get(string(data), "role_name").String()
+	matched, _ := regexp.MatchString("^([A-Za-z_]{3,20})$", r.RoleName)
+	if !matched {
+		msg := models.NewResMessage("400", "The role name does not meet the requirements: , ^([A-Za-z]{3,20})$ ")
+		c.JSON(http.StatusBadRequest, msg)
+		log.Error("AddRole. role_name: ", r.RoleName)
+		return
+	}
 	r.RoleDesc = gjson.Get(string(data), "role_desc").String()
 
 	item := make(map[string]int64)
