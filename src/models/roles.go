@@ -3,6 +3,7 @@ package models
 import (
 	"fmt"
 	"mana/src/connections/database/mysql"
+	"strconv"
 	"time"
 )
 
@@ -19,7 +20,7 @@ type roleList struct {
 func NewRoleList() *roleList {
 	return &roleList{
 		RoleState:  1,
-		RoleType:   1,
+		RoleType:   2,
 		CreateTime: time.Now().UnixNano() / 1e6,
 		UpdateTime: time.Now().UnixNano() / 1e6,
 	}
@@ -73,26 +74,33 @@ func InsertTheRole(r *roleList) (int64, error) {
 	return id, err
 }
 
-// DeleteRole 删除角色
-func DeleteRole()  {
+// DeleteRoles 删除角色
+func DeleteRoles(idList *[]int64) (int64, error) {
 	//sqlStr := `DELETE FROM role WHERE id in(1033,1033,1035,1036)`
-	rolrIdList := make([]string, 0)
-	rolrIdList = append(rolrIdList, "1042")
-	rolrIdList = append(rolrIdList, "1043")
-	rolrIdList = append(rolrIdList, "1044")
-	rolrIdList = append(rolrIdList, "1045")
-
+	if len(*idList) < 1 {
+		return -1, fmt.Errorf("The slice cannot be empty. ")
+	}
 	id := ""
-	for _, v := range rolrIdList {
+	for _, v := range *idList {
 		if len(id) == 0 {
-			id = id + v
+			id = id + strconv.FormatInt(v, 10)
 			continue
 		}
-		id = id + "," + v
+		id = id + "," + strconv.FormatInt(v, 10)
 	}
+
 	sqlStr := `DELETE FROM role WHERE id in(` + id + `)`
-	fmt.Println(sqlStr)
-	ret, _ := mysql.DB.Exec(sqlStr)
+
+	log.Debug("DeleteRoles, ", sqlStr)
+	ret, err := mysql.DB.Exec(sqlStr)
+	if err != nil {
+		log.Error("Delete role failed, ", err)
+		return -1, err
+	}
 	n, _ := ret.RowsAffected()
-	fmt.Println(n)
+	if err != nil {
+		log.Error("RowsAffected returns the number of rows affected by an update failed, ", err)
+	}
+
+	return n, nil
 }

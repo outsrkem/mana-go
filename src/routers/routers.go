@@ -33,6 +33,7 @@ func Index(r *gin.Engine) {
 		// 系统管理
 		v1Group.GET("/system/role", auth.GetRoleList)
 		v1Group.POST("/system/role", auth.AddRole)
+		v1Group.DELETE("/system/role", auth.DeleteRole)
 
 		// 获取用户详情
 		userGroup := v1Group.Group("/user")

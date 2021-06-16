@@ -47,6 +47,6 @@ func NewResMessage(code string, msg string) *resMessage {
 	return &resMessage{
 		Code:        code,
 		Msg:         msg,
-		RequestTime: time.Now().UnixNano(),
+		RequestTime: time.Now().UnixNano() / 1e6,
 	}
 }

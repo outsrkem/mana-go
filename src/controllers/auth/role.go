@@ -52,3 +52,28 @@ func AddRole(c *gin.Context) {
 	returns := models.NewReturns(item, msg)
 	c.JSON(http.StatusOK, &returns)
 }
+
+// DeleteRole 删除角色
+func DeleteRole(c *gin.Context)  {
+	roleId := make(map[string]interface{})
+	c.ShouldBind(&roleId)
+
+	data, _ := json.Marshal(roleId)
+	idList := gjson.Get(string(data), "role_id").String()
+	// [1001,1003,1002]
+
+	RoleIdListSlice := make([]int64, 0)
+	json.Unmarshal([]byte(idList), &RoleIdListSlice)
+
+	result, err := models.DeleteRoles(&RoleIdListSlice)
+	if err != nil {
+		msg := models.NewResMessage("400", "Delete fail.")
+		c.JSON(http.StatusOK, &msg)
+	}
+
+	item := make(map[string]int64)
+	item["result"] = result
+	msg := models.NewResMessage("200", "Successful.")
+	returns := models.NewReturns(item, msg)
+	c.JSON(http.StatusOK, &returns)
+}
