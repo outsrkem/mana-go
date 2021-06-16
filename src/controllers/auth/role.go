@@ -68,7 +68,8 @@ func DeleteRole(c *gin.Context)  {
 	result, err := models.DeleteRoles(&RoleIdListSlice)
 	if err != nil {
 		msg := models.NewResMessage("400", "Delete fail.")
-		c.JSON(http.StatusOK, &msg)
+		c.JSON(http.StatusBadRequest, &msg)
+		return
 	}
 
 	item := make(map[string]int64)

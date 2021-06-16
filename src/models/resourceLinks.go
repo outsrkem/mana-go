@@ -93,7 +93,7 @@ func FindByResourceLinks(pageSize, page int, activate, category string) (*map[st
 		createTime, _ := strconv.ParseInt(l.CREATETIME, 10, 64)
 		updateTime, _ := strconv.ParseInt(l.UPDATETIME, 10, 64)
 		item := make(map[string]string)
-		item["Id"] = l.ID
+		item["id"] = l.ID
 		item["name"] = l.LINKNAME
 		item["content"] = l.LINKURL
 		item["describes"] = l.DESCRIBES
