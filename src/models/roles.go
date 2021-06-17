@@ -104,3 +104,4 @@ func DeleteRoles(idList *[]int64) (int64, error) {
 
 	return n, nil
 }
+
