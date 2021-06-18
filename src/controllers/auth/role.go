@@ -78,3 +78,25 @@ func DeleteRole(c *gin.Context)  {
 	returns := models.NewReturns(item, msg)
 	c.JSON(http.StatusOK, &returns)
 }
+
+// UpdateRolePermission 更新角色权限
+func UpdateRolePermission(c *gin.Context) {
+	raw := make(map[string]interface{})
+	c.ShouldBind(&raw)
+	data, _ := json.Marshal(raw)
+	roleId := gjson.Get(string(data), "role_id").String() // 转化为string
+
+	// 获取权限转化为切片
+	permissionId := gjson.Get(string(data), "permission_id").String()
+	permissionIdList := make([]int64, 0)
+	json.Unmarshal([]byte(permissionId), &permissionIdList)
+
+	if nil != models.UpdateRolePermissions(roleId, &permissionIdList) {
+		msg := models.NewResMessage("500", "Failed to update permissions")
+		c.JSON(http.StatusInternalServerError, msg)
+		log.Error("UpdateRolePermission error")
+		return
+	}
+	msg := models.NewResMessage("200", "Successful.")
+	c.JSON(http.StatusOK, &msg)
+}

@@ -105,3 +105,53 @@ func DeleteRoles(idList *[]int64) (int64, error) {
 	return n, nil
 }
 
+// 更新角色权限，清空权限，新增权限
+func UpdateRolePermissions(roleId string, perList *[]int64) error {
+	sqlStr := `SELECT id from role_menu WHERE id=0;`
+	if len(*perList) != 0 {
+		val := ""
+		createTime := strconv.FormatInt(time.Now().UnixNano()/1e6, 10)
+		// INSERT INTO role_menu (mid, rid) VALUES (2, 0000),(2,0000)
+		for _, v := range *perList {
+			if len(val) == 0 {
+				val = val + `(` + strconv.FormatInt(v, 10) + `,` + roleId + `,` + createTime + `)`
+				continue
+			}
+			val = val + `,` + `(` + strconv.FormatInt(v, 10) + `,` + roleId + `,` + createTime + `)`
+
+		}
+
+		sqlStr = `INSERT INTO role_menu (mid, rid, create_time) VALUES ` + val + `;`
+	}
+
+	tx, err := mysql.DB.Begin() // 开启事务
+	if err != nil {
+		if tx != nil {
+			tx.Rollback()
+		}
+		log.Error("UpdateRolePermission， 开启事务失败", err)
+		return err
+	}
+	// 删除原有的角色权限
+	_, err = tx.Exec(`DELETE FROM role_menu WHERE rid=?;`, roleId)
+	if err != nil {
+		tx.Rollback()
+		log.Error("UpdateRolePermission，删除原有的角色权限失败 ", err)
+		return err
+	}
+	// 添加新的角色权限
+	_, err = tx.Exec(sqlStr)
+	if err != nil {
+		tx.Rollback()
+		log.Error("UpdateRolePermission，添加新的角色权限失败 ", err, sqlStr)
+		return err
+	}
+	// 提交事务
+	if err = tx.Commit(); err != nil {
+		tx.Rollback()
+		log.Error("UpdateRolePermission，提交事务失败，事务回滚...", err)
+		return err
+	}
+	return nil
+}
+

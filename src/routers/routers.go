@@ -35,6 +35,7 @@ func Index(r *gin.Engine) {
 		v1Group.POST("/system/role", auth.AddRole)
 		v1Group.DELETE("/system/role", auth.DeleteRole)
 		v1Group.GET("/system/menus/list", menus.GetMenusAll)
+		v1Group.PATCH("/system/menus/role/binding", auth.UpdateRolePermission)
 
 		// 获取用户详情
 		userGroup := v1Group.Group("/user")
