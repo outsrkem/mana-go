@@ -37,3 +37,22 @@ func GetUserList(c *gin.Context) {
     returns := models.NewReturns(res, msg)
     c.JSON(http.StatusOK, &returns)
 }
+
+
+func GetUserRoleList(c *gin.Context) {
+    uid := c.DefaultQuery("uid","0" )
+    // 查询用户列表
+    roleList := models.FindByRoleList()
+    // 查询已授权的角色id
+    authorizedId := models.FindByAuthorizedRoleId(uid)
+
+    var items map[string]interface{}
+    items = make(map[string]interface{}, 0)
+    items["role_list"] = roleList
+    items["authorized"] = authorizedId
+
+
+    msg := models.NewResMessage("200", "successfully")
+    returns := models.NewReturns(items, msg)
+    c.JSON(http.StatusOK, &returns)
+}

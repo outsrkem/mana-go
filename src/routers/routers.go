@@ -39,6 +39,7 @@ func Index(r *gin.Engine) {
 		// /api/v1/common/system/user/role/binding
 		v1Group.PATCH("/system/user/role/binding", auth.UpdateUserRole)
 		v1Group.GET("/system/user", auth.GetUserList)
+		v1Group.GET("/system/user/role/list", auth.GetUserRoleList)
 
 		// 获取用户详情
 		userGroup := v1Group.Group("/user")

@@ -207,3 +207,28 @@ func UpdateUserRoles(uid string, roleList *[]int64) error {
 }
 
 
+// FindByAuthorizedRoleId 根据用户id查询绑定的角色
+func FindByAuthorizedRoleId(userid string) *[]int64 {
+	sqlStr := `SELECT rid FROM role_user WHERE userid=?;`
+	log.Debug(sqlStr, userid)
+
+	rows, err := mysql.DB.Query(sqlStr, userid)
+	if err != nil {
+		log.Info(sqlStr, err)
+	}
+	defer rows.Close()
+
+	items := make([]int64, 0)
+	for rows.Next() {
+		var id int64
+		err := rows.Scan(&id)
+		if err != nil {
+			log.Info("GetUserRoleList, ", err.Error())
+		}
+
+		items = append(items, id)
+
+	}
+	return &items
+}
+
