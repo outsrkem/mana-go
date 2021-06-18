@@ -36,11 +36,14 @@ func Index(r *gin.Engine) {
 		v1Group.DELETE("/system/role", auth.DeleteRole)
 		v1Group.GET("/system/menus/list", menus.GetMenusAll)
 		v1Group.PATCH("/system/menus/role/binding", auth.UpdateRolePermission)
+		// /api/v1/common/system/user/role/binding
+		v1Group.PATCH("/system/user/role/binding", auth.UpdateUserRole)
 
 		// 获取用户详情
 		userGroup := v1Group.Group("/user")
 		{
 			userGroup.GET("/userinfo/:uid", user.FindByUserinfo)
+			// /api/v1/common/user/role/binding
 		}
 
 		// 获取导航链接列表，添加链接，编辑，删除，获取单条导航链接记录
