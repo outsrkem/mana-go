@@ -30,3 +30,10 @@ func UpdateUserRole(c *gin.Context) {
     msg := models.NewResMessage("200", "Successful.")
     c.JSON(http.StatusOK, &msg)
 }
+
+func GetUserList(c *gin.Context) {
+    res := models.GetUserLists()
+    msg := models.NewResMessage("200", "successfully")
+    returns := models.NewReturns(res, msg)
+    c.JSON(http.StatusOK, &returns)
+}

@@ -147,3 +147,43 @@ func SelectByUserInfo(uid string) (*userCenter, error) {
 	}
 	return &u, err
 }
+
+// GetUserLists 获取用户列表
+// 后续优化，表结构
+func GetUserLists() *map[string]interface{} {
+	/* 查询用户信息
+		SELECT
+			u.ID,
+			u.USERID
+		FROM
+			user u
+		LEFT JOIN user_center uc ON (u.USERID = uc.USERID)
+	 */
+	sqlStr := `SELECT ID,USERID,USERNAME,UPDATETIME,CREATETIME FROM user;`
+	rows, err := mysql.DB.Query(sqlStr)
+	if err != nil {
+		log.Info(sqlStr, err)
+	}
+	defer rows.Close()
+
+	var u userInfo
+	var items []map[string]interface{}
+	items = make([]map[string]interface{}, 0)
+	for rows.Next() {
+		if rows.Scan(&u.ID, &u.USERID, &u.USERNAME,&u.UPDATETIME,&u.CREATETIME) != nil {
+			log.Info("Get the user list, ", err.Error())
+		}
+
+		item := make(map[string]interface{})
+		item["id"] = u.ID
+		item["user_id"] = u.USERID
+		item["user_name"] = u.USERNAME
+		item["nickname"] = u.NICKNAME
+		item["create_time"] = u.CREATETIME
+		item["update_time"] = u.UPDATETIME
+		items = append(items, item)
+	}
+
+	returns := NewResponse(items, nil)
+	return &returns
+}

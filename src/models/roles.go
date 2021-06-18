@@ -155,6 +155,7 @@ func UpdateRolePermissions(roleId string, perList *[]int64) error {
 	return nil
 }
 
+// UpdateUserRoles 更新用户角色
 func UpdateUserRoles(uid string, roleList *[]int64) error {
 	sqlStr := `SELECT id from role_menu WHERE id=0;`
 	if len(*roleList) != 0 {
