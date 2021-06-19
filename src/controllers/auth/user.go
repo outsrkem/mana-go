@@ -48,6 +48,7 @@ func GetUserRoleList(c *gin.Context) {
 
     var items map[string]interface{}
     items = make(map[string]interface{}, 0)
+    //fmt.Println(*roleList["items"])
     items["role_list"] = roleList
     items["authorized"] = authorizedId
 

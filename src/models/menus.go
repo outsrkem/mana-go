@@ -47,16 +47,17 @@ func selectMenuLevel2(mId, userId string) []map[string]interface{} {
 
     // 2.查询菜单的时候匹配权限
     sqlStr := `SELECT
-					sub.Id AS sub_m_id,
-					sub.name AS sub_m_name,
-					sub.path AS sub_m_path,
-					sub.level AS sub_m_level,
-					sub.p_code
-				FROM
-					menus m
-				LEFT JOIN menus sub ON (m.Id = sub.parent_menu_id)
-				WHERE
-					m.Id = ?;`
+                    sub.id AS sub_m_id,
+                    sub. NAME AS sub_m_name,
+                    sub.path AS sub_m_path,
+                    sub. LEVEL AS sub_m_level,
+                    sub.p_code
+                FROM
+                    menus sub
+                WHERE
+                    parent_menu_id = ?
+                ORDER BY
+                    sub.sequence;`
 
     log.Debug(sqlStr)
     rows, err := mysql.DB.Query(sqlStr, mId)
@@ -98,7 +99,7 @@ func SelectMenuList(userId string) *map[string]interface{} {
     var items []map[string]interface{}
     items = make([]map[string]interface{}, 0)
 
-    sqlStr_1 := `SELECT Id,name,path FROM menus WHERE level =1;`
+    sqlStr_1 := `SELECT Id,name,path FROM menus WHERE level =1 ORDER BY sequence;`
     rows_1, err := mysql.DB.Query(sqlStr_1)
     if err != nil {
         log.Info(sqlStr_1, err)
@@ -175,7 +176,7 @@ func FindByMenuListAll() *[]map[string]interface{} {
     var items []map[string]interface{}
     items = make([]map[string]interface{}, 0)
 
-    sqlStr := `SELECT id,name,path,p_code,description,create_time,update_time FROM menus WHERE level =1;`
+    sqlStr := `SELECT id,name,path,p_code,description,create_time,update_time FROM menus WHERE level =1 ORDER BY sequence;`
     rows, err := mysql.DB.Query(sqlStr)
     if err != nil {
         log.Info(sqlStr, err)
