@@ -127,39 +127,7 @@ func SelectByUserInfo(uid string) (*userCenter, error) {
 // GetUserLists 获取用户列表
 // 后续优化，表结构
 func GetUserLists() *map[string]interface{} {
-    /* 查询用户信息
-        SELECT
-            u.ID,
-            u.USERID
-        FROM
-            user u
-        LEFT JOIN user_center uc ON (u.USERID = uc.USERID)
-     */
-    sqlStr := `SELECT ID,USERID,USERNAME,UPDATETIME,CREATETIME FROM user;`
-    rows, err := mysql.DB.Query(sqlStr)
-    if err != nil {
-        log.Info(sqlStr, err)
-    }
-    defer rows.Close()
-
-    var u userInfo
-    var items []map[string]interface{}
-    items = make([]map[string]interface{}, 0)
-    for rows.Next() {
-        if rows.Scan(&u.ID, &u.USERID, &u.USERNAME,&u.UPDATETIME,&u.CREATETIME) != nil {
-            log.Info("Get the user list, ", err.Error())
-        }
-
-        item := make(map[string]interface{})
-        item["id"] = u.ID
-        item["user_id"] = u.USERID
-        item["user_name"] = u.USERNAME
-        item["nickname"] = u.NICKNAME
-        item["create_time"] = u.CREATETIME
-        item["update_time"] = u.UPDATETIME
-        items = append(items, item)
-    }
-
+    items := SelectUsersQueryMultiRow("",1,10)
     returns := NewResponse(items, nil)
     return &returns
 }
@@ -190,7 +158,7 @@ func SelectUsersQueryMultiRow(uId string, page, pageSize int) []map[string]inter
 
     sqlCountStr := `SELECT COUNT(*) FROM user ue INNER JOIN user_center uc ON (ue.USERID = uc.USERID) WHERE 1=1`
 	// 1.sql
-	sqlStr := `SELECT uc.ID AS id, ue.USERID AS user_id, ue.PASSWD AS passwd, ue.EXPIRES AS expires,
+	sqlStr := `SELECT uc.ID AS id, ue.USERID AS user_id, ue.EXPIRES AS expires,
 			ue.INACTIVE AS inactive, uc.USERNAME AS username, uc.NICKNAME AS nickname, uc.MOBILE AS mobile,
 			uc.EMAIL AS email, uc.DESCRIBES AS describes, uc.PICTURE AS picture, uc.CREATETIME AS create_time,
 			uc.UPDATETIME AS update_time FROM user ue INNER JOIN user_center uc ON (ue.USERID = uc.USERID) WHERE 1=1`
@@ -227,16 +195,15 @@ func SelectUsersQueryMultiRow(uId string, page, pageSize int) []map[string]inter
 	for rows.Next() {
 		var u users
         item := make(map[string]interface{})
-		if nil != rows.Scan(&u.id, &u.userId, &u.passwd, &u.expires, &u.inactive, &u.username, &u.nickname,
+		if nil != rows.Scan(&u.id, &u.userId, &u.expires, &u.inactive, &u.username, &u.nickname,
 		    &u.mobile, &u.email, &u.describes, &u.picture, &u.createTime, &u.updateTime) {
             log.Error("SelectUsersQueryMultiRow Scan error", err)
 		}
         item["id"] = u.id
         item["user_id"] = u.userId
-        item["passwd"] = u.passwd
         item["expires"] = u.expires
         item["inactive"] = u.inactive
-        item["username"] = u.username
+        item["user_name"] = u.username
         item["nickname"] = u.nickname
         item["mobile"] = u.mobile
         item["email"] = u.email
