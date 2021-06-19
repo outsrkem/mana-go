@@ -1,13 +1,11 @@
 package user
 
 import (
+	"github.com/gin-gonic/gin"
 	"mana/src/config"
 	"mana/src/filters/util"
 	"mana/src/models"
 	"net/http"
-	"time"
-
-	"github.com/gin-gonic/gin"
 )
 
 // 日志
@@ -79,25 +77,15 @@ func Login(c *gin.Context) {
 		c.JSON(http.StatusUnauthorized, msg)
 		return
 	}
-
-	var user models.UserLoginStruct
-	meta := &user.MetaInfo
-	resp := &user.Response
-
-	// 生成token
-	token := util.EncodeAuthToken(result.USERID, result.USERNAME, result.ROLE)
-
-	// 构造返回数据
-	meta.RequestTime = time.Now().UnixNano()
-	meta.Msg = "login successfully"
-	meta.Code = "200"
-	resp.Userid = result.USERID
-	resp.Username = result.USERNAME
-	resp.Nickname = result.NICKNAME
-	resp.Role = result.ROLE
-	resp.Expires = result.EXPIRES
-	resp.Token = token
-	c.JSON(http.StatusOK, &user)
+	items := make(map[string]interface{}, 0)
+	items["token"] = util.EncodeAuthToken(result.USERID, result.USERNAME, result.ROLE)  // 生成token
+	items["userid"] = result.USERID
+	items["username"] = result.USERNAME
+	items["nickname"] = result.NICKNAME
+	items["expires"] = result.EXPIRES
+	msg := models.NewResMessage("200", "login Successfully")
+	returns := models.NewReturns(items, msg)
+	c.JSON(http.StatusOK, &returns)
 }
 
 // FindByUserinfo 查询用户信息
