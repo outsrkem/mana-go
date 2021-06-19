@@ -19,7 +19,7 @@ func Index(r *gin.Engine) {
 
 	// 用户登录,注册，
 	r.POST("/api/v1/common/user/login", user.Login)
-	r.POST("/api/v1/common/user/register", user.Login)
+	r.POST("/api/v1/common/user/register", user.InstUser)
 
 	// 验证请求token中间件
 	r.Use(util.AuthToken())
