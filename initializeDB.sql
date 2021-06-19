@@ -89,3 +89,6 @@ CREATE TABLE resource_links (
   UPDATETIME varchar(255) DEFAULT NULL COMMENT '更新时间',
   PRIMARY KEY (ID)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='导航链接';
+
+-- 用户详情表添加索引，确保不能插入相同用户名的用户
+ALTER TABLE user_center ADD UNIQUE(USERNAME)

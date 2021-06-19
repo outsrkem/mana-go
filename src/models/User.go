@@ -134,7 +134,7 @@ func GetUserLists() *map[string]interface{} {
 
 // 优化
 type users struct {
-	id         string `json:"id"`
+	id         int `json:"id"`
 	userId     string `json:"user_id"`
 	passwd     string `json:"passwd"`
 	expires    int    `json:"expires"`
@@ -199,18 +199,18 @@ func SelectUsersQueryMultiRow(uId string, page, pageSize int) []map[string]inter
 		    &u.mobile, &u.email, &u.describes, &u.picture, &u.createTime, &u.updateTime) {
             log.Error("SelectUsersQueryMultiRow Scan error", err)
 		}
-        item["id"] = u.id
-        item["user_id"] = u.userId
-        item["expires"] = u.expires
-        item["inactive"] = u.inactive
-        item["user_name"] = u.username
-        item["nickname"] = u.nickname
-        item["mobile"] = u.mobile
-        item["email"] = u.email
-        item["describes"] = u.describes
-        item["picture"] = u.picture
-        item["create_time"] = u.createTime
-        item["update_time"] = u.updateTime
+        item["id"] = &u.id
+        item["user_id"] = &u.userId
+        item["expires"] = &u.expires
+        item["inactive"] = &u.inactive
+        item["user_name"] = &u.username
+        item["nickname"] = &u.nickname
+        item["mobile"] = &u.mobile
+        item["email"] = &u.email
+        item["describes"] = &u.describes
+        item["picture"] = &u.picture
+        item["create_time"] = &u.createTime
+        item["update_time"] = &u.updateTime
         items = append(items, item)
 	}
     return items
